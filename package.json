@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:web": "cd packages/drivers/web && npm run dev",
-    "build:web": "cd packages/drivers/web && npm run build",
-    "start:web": "cd packages/drivers/web && npm run start",
-    "lint:web": "cd packages/drivers/web && npm run lint"
+    "dev:web:next": "cd packages/drivers/web/nextjs && npm run dev",
+    "build:web:next": "cd packages/drivers/web/nextjs && npm run build",
+    "start:web:next": "cd packages/drivers/web/nextjs && npm run start",
+    "lint:web:next": "cd packages/drivers/web/nextjs && npm run lint"
   },
   "keywords": [],
   "author": "",
