@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:web": "cd drivers/web && npm run dev",
-    "build:web": "cd drivers/web && npm run build",
-    "start:web": "cd drivers/web && npm run start",
-    "lint:web": "cd drivers/web && npm run lint"
+    "dev:web": "cd packages/drivers/web && npm run dev",
+    "build:web": "cd packages/drivers/web && npm run build",
+    "start:web": "cd packages/drivers/web && npm run start",
+    "lint:web": "cd packages/drivers/web && npm run lint"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "typescript": "^4.9.4"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
