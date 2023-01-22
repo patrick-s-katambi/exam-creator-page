@@ -26,11 +26,6 @@ type SectionsNumbersT = number[];
 
 type ExamModel = SectionT[];
 
-// type ExamModel = {
-//     id?: number;
-//     sections: SectionT[];
-// };
-
 type SectionT = {
     number: number;
     name: string;
@@ -83,35 +78,6 @@ const appTraits = Object.freeze({
         data: QuestionAddHandlerI;
     }) {
         const handler = (examInfo: ExamModel) => {
-            // // if (examInfo) {
-            // console.log("adding a question props", examInfo?.sections[props.data.sectionNumber]);
-            // let examSectionsInfo = examInfo?.sections.map((section) => {
-            //     if (section.number === props.data.sectionNumber) {
-            //         let currentQuestions = section.questions;
-
-            //         if (props.data.kind === "text") {
-            //             if (props.data.type === "short-answer") {
-            //                 section.questions = [
-            //                     ...currentQuestions,
-            //                     { text: "", answer: "", isShortAnswerQuestion: true },
-            //                 ];
-            //             }
-
-            //             if (props.data.type === "long-answer") {
-            //                 section.questions = [
-            //                     ...currentQuestions,
-            //                     { text: "", isShortAnswerQuestion: false },
-            //                 ];
-            //             }
-            //         }
-            //     }
-
-            //     return section;
-            // });
-            // // examInfo = { ...examInfo, sections: examSectionsInfo };
-            // examInfo = { sections: examSectionsInfo ?? [] };
-            // // }
-
             let newExamInfo = examInfo.map((section, index) => {
                 if (section.number === props.data.sectionNumber) {
                     const newQuestion: TextQuestionT | undefined = (function () {
