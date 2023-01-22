@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:web:next": "cd packages/drivers/web/nextjs && npm run dev",
-    "build:web:next": "cd packages/drivers/web/nextjs && npm run build",
-    "start:web:next": "cd packages/drivers/web/nextjs && npm run start",
-    "lint:web:next": "cd packages/drivers/web/nextjs && npm run lint"
+    "dev:web": "cd packages/drivers/web && npm run dev",
+    "build:web": "cd packages/drivers/web && npm run build",
+    "start:web": "cd packages/drivers/web && npm run start",
+    "lint:web": "cd packages/drivers/web && npm run lint"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +17,11 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@chakra-ui/react": "^2.4.9",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "framer-motion": "^8.5.0"
+  }
 }
