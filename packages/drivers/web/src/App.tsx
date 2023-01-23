@@ -187,6 +187,18 @@ function App() {
                                                     section: _section.number,
                                                 });
                                             })();
+                                            let isFirstInSection = indexxx === 0;
+                                            let isLastInSection = (() => {
+                                                let isLast: boolean = false;
+                                                questions.forEach((sect) => {
+                                                    if (sect.number === _section.number) {
+                                                        isLast =
+                                                            indexxx === sect.questions.length - 1;
+                                                    }
+                                                });
+
+                                                return isLast;
+                                            })();
                                             return (
                                                 <React.Fragment key={indexxx}>
                                                     <Container
@@ -243,6 +255,7 @@ function App() {
                                                                         <AiOutlineArrowUp className="text-white" />
                                                                     }
                                                                     onClick={() => {}}
+                                                                    disabled={isFirstInSection}
                                                                 />
 
                                                                 <TopButton
@@ -251,6 +264,7 @@ function App() {
                                                                         <AiOutlineArrowDown className="text-white" />
                                                                     }
                                                                     onClick={() => {}}
+                                                                    disabled={isLastInSection}
                                                                 />
                                                             </Container>
                                                         </ScaleFade>
@@ -366,13 +380,17 @@ interface TopButtonProps {
     label?: string;
     onClick?: () => void;
     Icon?: React.ReactNode;
+    disabled?: boolean;
 }
 
 const TopButton: React.FunctionComponent<TopButtonProps> = (props) => (
     <Button
         _hover={{ bg: secondaryBg, gap: 2 }}
+        _disabled={{ cursor: "not-allowed" }}
         bg={primaryBg}
-        border="0.5px solid white"
+        borderWidth={"0.5px"}
+        borderStyle="solid"
+        borderColor={props.disabled ? "gray.500" : "white"}
         transition="all"
         transitionDuration={"300ms"}
         gap={1}
@@ -380,8 +398,11 @@ const TopButton: React.FunctionComponent<TopButtonProps> = (props) => (
         p="1"
         variant={"solid"}
         onClick={props.onClick}
+        cursor={props.disabled ? "revert" : "pointer"}
+        disabled={props.disabled}
+        color={props.disabled ? "gray.500" : "white"}
     >
-        {props.Icon ?? <MdAdd color={textColor} />}
+        {props.Icon ?? <MdAdd />}
         {props.label && <Text fontSize={"sm"}>{props.label}</Text>}
     </Button>
 );
