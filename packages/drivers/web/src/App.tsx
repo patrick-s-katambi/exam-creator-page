@@ -153,8 +153,6 @@ function App() {
                                 p="2"
                                 value={`${sectionName}`}
                                 onChange={(value) => {
-                                    console.log("editing", value);
-
                                     handlers.onEditSectionTitle({
                                         name: value === "" ? `Section ${index + 1}` : value,
                                         sectionNumber,
@@ -255,7 +253,34 @@ function App() {
                                                             </Container>
                                                         </ScaleFade>
 
-                                                        <Text fontSize={"lg"}>{question.name}</Text>
+                                                        <Editable
+                                                            h="fit-content"
+                                                            w="full"
+                                                            textAlign={"left"}
+                                                            p="2"
+                                                            value={question.name}
+                                                            onChange={(value) => {
+                                                                handlers.onEditQuestionName({
+                                                                    name:
+                                                                        value === ""
+                                                                            ? `Question ${
+                                                                                  index + 1
+                                                                              }`
+                                                                            : value,
+                                                                    sectionNumber: _section.number,
+                                                                    questionIndex: indexxx,
+                                                                });
+                                                            }}
+                                                        >
+                                                            <EditablePreview
+                                                                as={"h1"}
+                                                                fontSize="lg"
+                                                                lineHeight={"none"}
+                                                            />
+                                                            <EditableInput fontSize="lg" />
+                                                        </Editable>
+
+                                                        {/* <Text fontSize={"lg"}>{question.name}</Text> */}
                                                         <Editor
                                                             value={question.text}
                                                             onChange={(value) =>
