@@ -263,7 +263,16 @@ function App() {
                                                                     Icon={
                                                                         <AiOutlineArrowDown className="text-white" />
                                                                     }
-                                                                    onClick={() => {}}
+                                                                    onClick={() =>
+                                                                        handlers.onMoveDownQuestion(
+                                                                            {
+                                                                                questionIndex:
+                                                                                    indexxx,
+                                                                                sectionNumber:
+                                                                                    _section.number,
+                                                                            }
+                                                                        )
+                                                                    }
                                                                     disabled={isLastInSection}
                                                                 />
                                                             </Container>
@@ -296,7 +305,6 @@ function App() {
                                                             <EditableInput fontSize="lg" />
                                                         </Editable>
 
-                                                        {/* <Text fontSize={"lg"}>{question.name}</Text> */}
                                                         <Editor
                                                             value={question.text}
                                                             onChange={(value) =>

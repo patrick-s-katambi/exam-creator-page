@@ -72,6 +72,14 @@ export function useApp() {
         });
     };
 
+    const onMoveDownQuestion = (props: { sectionNumber: number; questionIndex: number }) => {
+        appTraits.onMoveDownQuestion({
+            setter: setQuestions,
+            sectionNumber: props.sectionNumber,
+            questionIndex: props.questionIndex,
+        });
+    };
+
     return {
         questions,
         sections,
@@ -83,6 +91,7 @@ export function useApp() {
             onDeleteSection,
             onEditSectionTitle,
             onEditQuestionName,
+            onMoveDownQuestion,
         },
     };
 }
@@ -157,7 +166,6 @@ export const appTraits = Object.freeze({
             const newQuestion: TextQuestionT | undefined = (function () {
                 let questionNumber = Number(props.data.questionIndex) + 2;
                 let questionName = `Question ${questionNumber}`;
-                console.log("questionName", questionName);
 
                 if (props.data.kind === "text") {
                     if (props.data.type === "short-answer") {
@@ -340,6 +348,30 @@ export const appTraits = Object.freeze({
             examInfo = examInfo.map((section) => {
                 if (section.number === props.sectionNumber) {
                     section.questions[props.questionIndex].name = props.name;
+                }
+                return section;
+            });
+            return examInfo;
+        };
+        props.setter(handler);
+    },
+
+    onMoveDownQuestion(props: {
+        sectionNumber: number;
+        questionIndex: number;
+        setter: React.Dispatch<React.SetStateAction<ExamModel>>;
+    }) {
+        const handler = (examInfo: ExamModel) => {
+            examInfo = examInfo.map((section) => {
+                if (section.number === props.sectionNumber) {
+                    let currentQuestionIndex = props.questionIndex;
+                    let nextQuestionIndex = currentQuestionIndex + 1;
+
+                    let currentQuestion = section.questions[currentQuestionIndex];
+                    let nextQuestion = section.questions[nextQuestionIndex];
+
+                    section.questions[currentQuestionIndex] = nextQuestion;
+                    section.questions[nextQuestionIndex] = currentQuestion;
                 }
                 return section;
             });
