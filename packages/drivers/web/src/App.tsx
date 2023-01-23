@@ -254,7 +254,13 @@ function App() {
                                                                     Icon={
                                                                         <AiOutlineArrowUp className="text-white" />
                                                                     }
-                                                                    onClick={() => {}}
+                                                                    onClick={() =>
+                                                                        handlers.onMoveUpQuestion({
+                                                                            questionIndex: indexxx,
+                                                                            sectionNumber:
+                                                                                _section.number,
+                                                                        })
+                                                                    }
                                                                     disabled={isFirstInSection}
                                                                 />
 

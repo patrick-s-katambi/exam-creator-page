@@ -80,6 +80,14 @@ export function useApp() {
         });
     };
 
+    const onMoveUpQuestion = (props: { sectionNumber: number; questionIndex: number }) => {
+        appTraits.onMoveUpQuestion({
+            setter: setQuestions,
+            sectionNumber: props.sectionNumber,
+            questionIndex: props.questionIndex,
+        });
+    };
+
     return {
         questions,
         sections,
@@ -92,6 +100,7 @@ export function useApp() {
             onEditSectionTitle,
             onEditQuestionName,
             onMoveDownQuestion,
+            onMoveUpQuestion,
         },
     };
 }
@@ -372,6 +381,30 @@ export const appTraits = Object.freeze({
 
                     section.questions[currentQuestionIndex] = nextQuestion;
                     section.questions[nextQuestionIndex] = currentQuestion;
+                }
+                return section;
+            });
+            return examInfo;
+        };
+        props.setter(handler);
+    },
+
+    onMoveUpQuestion(props: {
+        sectionNumber: number;
+        questionIndex: number;
+        setter: React.Dispatch<React.SetStateAction<ExamModel>>;
+    }) {
+        const handler = (examInfo: ExamModel) => {
+            examInfo = examInfo.map((section) => {
+                if (section.number === props.sectionNumber) {
+                    let currentQuestionIndex = props.questionIndex;
+                    let prevQuestionIndex = currentQuestionIndex - 1;
+
+                    let currentQuestion = section.questions[currentQuestionIndex];
+                    let prevQuestion = section.questions[prevQuestionIndex];
+
+                    section.questions[currentQuestionIndex] = prevQuestion;
+                    section.questions[prevQuestionIndex] = currentQuestion;
                 }
                 return section;
             });
