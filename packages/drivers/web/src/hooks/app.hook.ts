@@ -7,13 +7,33 @@ export function useApp() {
     const onAddSection = () =>
         appTraits.addNewSection({ setter: setSections, questionSetter: setQuestions });
 
-    const onAddQuestion = (props: QuestionAddHandlerI) =>
+    const onAddQuestion = (props: QuestionAddHandlerI) => {
         appTraits.addNewQuestion({
             setter: setQuestions,
             data: { ...props },
         });
+    };
 
-    return { questions, sections, handlers: { onAddSection, onAddQuestion } };
+    const onEditorChange = (props: {
+        isAnswer: boolean;
+        kind: questionKind;
+        type: textQuestionType;
+        newValue: string;
+        questionIndex: number;
+        sectionNumber: number;
+    }) => {
+        appTraits.onChangeEditor({
+            setter: setQuestions,
+            isAnswer: props.isAnswer,
+            kind: props.kind,
+            newValue: props.newValue,
+            questionIndex: props.questionIndex,
+            sectionNumber: props.sectionNumber,
+            type: props.type,
+        });
+    };
+
+    return { questions, sections, handlers: { onAddSection, onAddQuestion, onEditorChange } };
 }
 
 // question list state
@@ -41,13 +61,16 @@ export type TextQuestionT = {
     isShortAnswerQuestion: boolean;
 };
 
+type questionKind = "text" | "multiple choice" | "video";
+type textQuestionType = "short-answer" | "long-answer";
+
 export interface QuestionAddHandlerI {
     sectionNumber: number;
-    kind: "text" | "multiple choice" | "video";
-    type: "short-answer" | "long-answer";
+    kind: questionKind;
+    type: textQuestionType;
 }
 
-const appTraits = Object.freeze({
+export const appTraits = Object.freeze({
     addNewSection(props: {
         setter: React.Dispatch<React.SetStateAction<SectionsNumbersT>>;
         questionSetter: React.Dispatch<React.SetStateAction<ExamModel>>;
@@ -108,9 +131,38 @@ const appTraits = Object.freeze({
                 return section;
             });
 
-            console.log("newExamInfo", newExamInfo);
-
             return newExamInfo;
+        };
+        props.setter(handler);
+    },
+
+    onChangeEditor(props: {
+        questionIndex: number;
+        sectionNumber: number;
+        newValue: string;
+        setter: React.Dispatch<React.SetStateAction<ExamModel>>;
+        kind: questionKind;
+        type: textQuestionType;
+        isAnswer: boolean;
+    }) {
+        const handler = (examInfo: ExamModel) => {
+            examInfo = examInfo.map((section, index) => {
+                if (section.number === props.sectionNumber) {
+                    if (props.kind === "text") {
+                        if (props.type === "long-answer") {
+                            section.questions[props.questionIndex].text = props.newValue;
+                        }
+                        if (props.type === "short-answer") {
+                            if (props.isAnswer) {
+                                section.questions[props.questionIndex].answer = props.newValue;
+                            } else section.questions[props.questionIndex].text = props.newValue;
+                        }
+                    }
+                }
+
+                return section;
+            });
+            return examInfo;
         };
         props.setter(handler);
     },

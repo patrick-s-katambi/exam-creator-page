@@ -9,7 +9,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdOutlineDelete } from "react-icons/md";
 
 const primaryBg = "#383838"; // -- bg primary
 const secondaryBg = "#454545"; // -- bg secondary
@@ -156,12 +156,16 @@ function App() {
                                 return (
                                     <React.Fragment key={indexx}>
                                         {_section.questions.map((question, indexxx) => {
+                                            let isShortAnswer = Boolean(
+                                                question.answer || question.answer === ""
+                                            );
                                             return (
                                                 <React.Fragment key={indexxx}>
                                                     <Container
                                                         key={indexx}
                                                         minW={"full"}
                                                         p="2"
+                                                        position={"relative"}
                                                         display="flex"
                                                         flexDirection={"column"}
                                                         rounded={"lg"}
@@ -175,16 +179,64 @@ function App() {
                                                         }}
                                                         onMouseLeave={onMouseLeave}
                                                     >
+                                                        <Container
+                                                            position={"absolute"}
+                                                            top={0}
+                                                            right={0}
+                                                            bg={secondaryBg}
+                                                            p="2"
+                                                            h={10}
+                                                            minW="fit-content"
+                                                            w="fit-content"
+                                                            rounded={"lg"}
+                                                            display="flex"
+                                                            flexDirection={"row"}
+                                                            alignItems="center"
+                                                            gap="2"
+                                                        >
+                                                            <TopButton
+                                                                label="delete"
+                                                                Icon={
+                                                                    <MdOutlineDelete className="text-white" />
+                                                                }
+                                                            />
+                                                        </Container>
+
                                                         <Text fontSize={"sm"}>
                                                             Question {indexxx + 1}
                                                         </Text>
-                                                        <Editor value={question.text} />
+                                                        <Editor
+                                                            value={question.text}
+                                                            onChange={(value) =>
+                                                                handlers.onEditorChange({
+                                                                    isAnswer: false,
+                                                                    kind: "text",
+                                                                    type: isShortAnswer
+                                                                        ? "short-answer"
+                                                                        : "long-answer",
+                                                                    newValue: value,
+                                                                    questionIndex: indexxx,
+                                                                    sectionNumber: _section.number,
+                                                                })
+                                                            }
+                                                        />
 
-                                                        {Boolean(question.answer === "") && (
+                                                        {isShortAnswer && (
                                                             <>
                                                                 <Text fontSize={"sm"}>Answer</Text>
                                                                 <Editor
                                                                     value={String(question.answer)}
+                                                                    onChange={(value) =>
+                                                                        handlers.onEditorChange({
+                                                                            isAnswer: true,
+                                                                            kind: "text",
+                                                                            type: "short-answer",
+                                                                            newValue: value,
+                                                                            questionIndex: indexxx,
+                                                                            sectionNumber:
+                                                                                _section.number,
+                                                                        })
+                                                                    }
                                                                 />
                                                             </>
                                                         )}
@@ -237,13 +289,14 @@ function App() {
 export default App;
 
 interface TopButtonProps {
-    label: string;
+    label?: string;
     onClick?: () => void;
+    Icon?: React.ReactNode;
 }
 
 const TopButton: React.FunctionComponent<TopButtonProps> = (props) => (
     <Button
-        _hover={{ bg: primaryBg, gap: 2, border: `0.3px solid ${textColor}` }}
+        _hover={{ bg: primaryBg, gap: 2 }}
         transition="all"
         transitionDuration={"300ms"}
         gap={1}
@@ -251,10 +304,10 @@ const TopButton: React.FunctionComponent<TopButtonProps> = (props) => (
         p="1"
         variant={"ghost"}
         onClick={props.onClick}
-        border={`0.3px solid transparent`}
+        border={`0.3px solid ${textColor}`}
     >
-        <MdAdd color={textColor} />
-        <Text fontSize={"sm"}>{props.label}</Text>
+        {props.Icon ?? <MdAdd color={textColor} />}
+        {props.label && <Text fontSize={"sm"}>{props.label}</Text>}
     </Button>
 );
 
@@ -288,10 +341,16 @@ import { QuestionAddHandlerI, TextQuestionT, useApp } from "./hooks/app.hook";
 
 interface EditorProps {
     value: string;
+    onChange: (value: string) => void;
 }
 
 const Editor: React.FunctionComponent<EditorProps> = (props) => (
-    <ReactQuill value={props.value} theme="snow" className="text-white " />
+    <ReactQuill
+        value={props.value}
+        onChange={props.onChange}
+        theme="snow"
+        className="text-white "
+    />
 );
 
 interface ActionButtonsProps {
