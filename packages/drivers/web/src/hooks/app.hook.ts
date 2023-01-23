@@ -11,6 +11,7 @@ export function useApp() {
         appTraits.addNewQuestion({
             setter: setQuestions,
             data: { ...props },
+            questions: questions,
         });
     };
 
@@ -136,29 +137,34 @@ export const appTraits = Object.freeze({
     addNewQuestion(props: {
         setter: React.Dispatch<React.SetStateAction<ExamModel>>;
         data: QuestionAddHandlerI;
+        questions: ExamModel;
     }) {
-        const newQuestion: TextQuestionT | undefined = (function () {
-            if (props.data.kind === "text") {
-                if (props.data.type === "short-answer") {
-                    return {
-                        isShortAnswerQuestion: true,
-                        text: "",
-                        answer: "",
-                        name: "",
-                    };
-                }
-
-                if (props.data.type === "long-answer") {
-                    return {
-                        isShortAnswerQuestion: false,
-                        text: "",
-                        name: "",
-                    };
-                }
-            }
-        })();
-
         if (Number(props.data.questionIndex) >= 0) {
+            const newQuestion: TextQuestionT | undefined = (function () {
+                let questionNumber = Number(props.data.questionIndex) + 2;
+                let questionName = `Question ${questionNumber}`;
+                console.log("questionName", questionName);
+
+                if (props.data.kind === "text") {
+                    if (props.data.type === "short-answer") {
+                        return {
+                            isShortAnswerQuestion: true,
+                            text: "",
+                            answer: "",
+                            name: questionName,
+                        };
+                    }
+
+                    if (props.data.type === "long-answer") {
+                        return {
+                            isShortAnswerQuestion: false,
+                            text: "",
+                            name: questionName,
+                        };
+                    }
+                }
+            })();
+
             const handler = (examInfo: ExamModel) => {
                 examInfo = examInfo.map((section) => {
                     if (section.number === props.data.sectionNumber) {
@@ -179,6 +185,34 @@ export const appTraits = Object.freeze({
 
             props.setter(handler);
         } else {
+            const newQuestion: TextQuestionT | undefined = (function () {
+                let questionNumber = (function () {
+                    let _section = props.questions.find(
+                        (sect) => sect.number === props.data.sectionNumber
+                    );
+                    return Number(_section?.questions.length) + 1 ?? 1;
+                })();
+                let questionName = `Question ${questionNumber}`;
+                if (props.data.kind === "text") {
+                    if (props.data.type === "short-answer") {
+                        return {
+                            isShortAnswerQuestion: true,
+                            text: "",
+                            answer: "",
+                            name: questionName,
+                        };
+                    }
+
+                    if (props.data.type === "long-answer") {
+                        return {
+                            isShortAnswerQuestion: false,
+                            text: "",
+                            name: questionName,
+                        };
+                    }
+                }
+            })();
+
             const handler = (examInfo: ExamModel) => {
                 let newExamInfo = examInfo.map((section, index) => {
                     if (section.number === props.data.sectionNumber) {

@@ -255,9 +255,7 @@ function App() {
                                                             </Container>
                                                         </ScaleFade>
 
-                                                        <Text fontSize={"lg"}>
-                                                            Question {indexxx + 1}
-                                                        </Text>
+                                                        <Text fontSize={"lg"}>{question.name}</Text>
                                                         <Editor
                                                             value={question.text}
                                                             onChange={(value) =>
