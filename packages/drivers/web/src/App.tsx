@@ -203,7 +203,7 @@ function App() {
                                                 <React.Fragment key={indexxx}>
                                                     <Container
                                                         key={indexx}
-                                                        _hover={{ bg: secondaryBg }}
+                                                        _hover={{ bg: secondaryBg, shadow: "lg" }}
                                                         minW={"full"}
                                                         p="2"
                                                         position={"relative"}
@@ -306,6 +306,7 @@ function App() {
                                                             <EditablePreview
                                                                 as={"h1"}
                                                                 fontSize="lg"
+                                                                fontWeight={"semibold"}
                                                                 lineHeight={"none"}
                                                             />
                                                             <EditableInput fontSize="lg" />
@@ -329,7 +330,7 @@ function App() {
 
                                                         {isShortAnswer && (
                                                             <>
-                                                                <Text fontSize={"sm"}>Answer</Text>
+                                                                <Text fontSize={"md"}>Answer</Text>
                                                                 <Editor
                                                                     value={String(question.answer)}
                                                                     onChange={(value) =>
