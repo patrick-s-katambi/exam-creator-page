@@ -41,10 +41,24 @@ export function useApp() {
         });
     };
 
+    const onDeleteSection = (props: { sectionNumber: number }) => {
+        appTraits.onDeleteSection({
+            setter: setQuestions,
+            sectionNumber: props.sectionNumber,
+            sectionSetter: setSections,
+        });
+    };
+
     return {
         questions,
         sections,
-        handlers: { onAddSection, onAddQuestion, onEditorChange, onDeleteQuestion },
+        handlers: {
+            onAddSection,
+            onAddQuestion,
+            onEditorChange,
+            onDeleteQuestion,
+            onDeleteSection,
+        },
     };
 }
 
@@ -197,5 +211,23 @@ export const appTraits = Object.freeze({
             return examInfo;
         };
         props.setter(handler);
+    },
+
+    onDeleteSection(props: {
+        sectionNumber: number;
+        setter: React.Dispatch<React.SetStateAction<ExamModel>>;
+        sectionSetter: React.Dispatch<React.SetStateAction<SectionsNumbersT>>;
+    }) {
+        const handler = (examInfo: ExamModel) => {
+            examInfo = examInfo.filter((section) => section.number !== props.sectionNumber);
+            return examInfo;
+        };
+        props.setter(handler);
+
+        const handler2 = (sectionNumbers: SectionsNumbersT) => {
+            sectionNumbers = sectionNumbers.filter((num) => num !== props.sectionNumber);
+            return sectionNumbers;
+        };
+        props.sectionSetter(handler2);
     },
 });

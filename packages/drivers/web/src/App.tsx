@@ -102,10 +102,14 @@ function App() {
             )}
 
             {sections.map((sectionNumber, index) => {
+                let isSectionHovered = (() => {
+                    return isItemHovered({ number: index, kind: "section" });
+                })();
                 return (
                     <React.Fragment key={`${index}-${sectionNumber}`}>
                         <Container
                             minW={"full"}
+                            position={"relative"}
                             display="flex"
                             flexDirection={"column"}
                             alignItems="center"
@@ -115,6 +119,31 @@ function App() {
                             }}
                             onMouseLeave={onMouseLeave}
                         >
+                            <ScaleFade initialScale={0.9} in={isSectionHovered}>
+                                <Container
+                                    bg={secondaryBg}
+                                    p="2"
+                                    h={10}
+                                    minW="fit-content"
+                                    w="fit-content"
+                                    rounded={"lg"}
+                                    display="flex"
+                                    flexDirection={"row"}
+                                    alignItems="center"
+                                    gap="2"
+                                >
+                                    <TopButton
+                                        label="delete"
+                                        Icon={<MdOutlineDelete className="text-white" />}
+                                        onClick={() => {
+                                            handlers.onDeleteSection({
+                                                sectionNumber: sectionNumber,
+                                            });
+                                        }}
+                                    />
+                                </Container>
+                            </ScaleFade>
+
                             <Editable
                                 defaultValue={`Section ${index + 1}`}
                                 h="fit-content"
@@ -127,9 +156,7 @@ function App() {
                             </Editable>
 
                             <ActionButtons
-                                isHovered={(() => {
-                                    return isItemHovered({ number: index, kind: "section" });
-                                })()}
+                                isHovered={isSectionHovered}
                                 handlers={{
                                     section: actionHandlers.section,
                                     longQuestion: () => {
