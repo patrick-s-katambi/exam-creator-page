@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { MdAdd, MdOutlineDelete } from "react-icons/md";
+import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
 const primaryBg = "#383838"; // -- bg primary
 const secondaryBg = "#454545"; // -- bg secondary
@@ -72,33 +73,18 @@ function App() {
             gap={0}
             className="min-h-screen"
         >
-            <Container
-                bg={secondaryBg}
-                minW={"full"}
-                p="2"
-                rounded={"lg"}
-                borderColor={textColor}
-                borderWidth={0.5}
-                display="flex"
-                alignItems="center"
-                gap="2"
-            >
-                <TopButton onClick={actionHandlers.section} label="Section" />
-            </Container>
-
-            <br />
-
             {sections.length === 0 && (
                 <Container
                     display="flex"
                     flexDirection={"column"}
                     alignItems="center"
                     justifyContent={"center"}
-                    gap={0}
+                    gap={5}
                 >
                     <Heading fontWeight={"thin"}>
-                        Start by adding a <strong>section</strong>
+                        Start by adding a <strong>Section</strong>
                     </Heading>
+                    <TopButton onClick={actionHandlers.section} label="Section" />
                 </Container>
             )}
 
@@ -235,7 +221,7 @@ function App() {
                                                                 flexDirection={"row"}
                                                                 alignItems="center"
                                                                 justifyContent={"end"}
-                                                                gap={0.5}
+                                                                gap={"1"}
                                                             >
                                                                 <TopButton
                                                                     label="delete"
@@ -249,6 +235,22 @@ function App() {
                                                                                 _section.number,
                                                                         })
                                                                     }
+                                                                />
+
+                                                                <TopButton
+                                                                    label="move up"
+                                                                    Icon={
+                                                                        <AiOutlineArrowUp className="text-white" />
+                                                                    }
+                                                                    onClick={() => {}}
+                                                                />
+
+                                                                <TopButton
+                                                                    label="move down"
+                                                                    Icon={
+                                                                        <AiOutlineArrowDown className="text-white" />
+                                                                    }
+                                                                    onClick={() => {}}
                                                                 />
                                                             </Container>
                                                         </ScaleFade>
@@ -400,7 +402,7 @@ const ActionButton: React.FunctionComponent<ActionButtonProps> = (props) => (
         h="fit-content"
         p="1"
         variant={"solid"}
-        marginInline={1}
+        marginInline={0.5}
         onClick={props.onClick}
     >
         <MdAdd color={textColor} />
@@ -447,7 +449,7 @@ const ActionButtons: React.FunctionComponent<ActionButtonsProps> = (props) => (
         flexWrap={"wrap"}
         alignItems="center"
         justifyContent={"center"}
-        gap="2px"
+        gap="1"
         h="fit-content"
         p="1"
         cursor={"pointer"}
@@ -458,7 +460,7 @@ const ActionButtons: React.FunctionComponent<ActionButtonsProps> = (props) => (
                 flexWrap={"wrap"}
                 alignItems="center"
                 justifyContent={"center"}
-                gap="5px"
+                gap="0.5px"
                 w="fit-content"
                 minW={"fit-content"}
             >
