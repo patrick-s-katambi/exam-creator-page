@@ -255,7 +255,7 @@ function App() {
                                                             </Container>
                                                         </ScaleFade>
 
-                                                        <Text fontSize={"sm"}>
+                                                        <Text fontSize={"lg"}>
                                                             Question {indexxx + 1}
                                                         </Text>
                                                         <Editor
@@ -304,6 +304,7 @@ function App() {
                                                                         type: "long-answer",
                                                                         sectionNumber:
                                                                             _section.number,
+                                                                        questionIndex: indexxx,
                                                                     });
                                                                 },
                                                                 shortQuestion: () => {
@@ -312,6 +313,7 @@ function App() {
                                                                         type: "short-answer",
                                                                         sectionNumber:
                                                                             _section.number,
+                                                                        questionIndex: indexxx,
                                                                     });
                                                                 },
                                                             }}

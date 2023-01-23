@@ -102,6 +102,7 @@ type textQuestionType = "short-answer" | "long-answer";
 
 export interface QuestionAddHandlerI {
     sectionNumber: number;
+    questionIndex?: number;
     kind: questionKind;
     type: textQuestionType;
 }
@@ -136,40 +137,62 @@ export const appTraits = Object.freeze({
         setter: React.Dispatch<React.SetStateAction<ExamModel>>;
         data: QuestionAddHandlerI;
     }) {
-        const handler = (examInfo: ExamModel) => {
-            let newExamInfo = examInfo.map((section, index) => {
-                if (section.number === props.data.sectionNumber) {
-                    const newQuestion: TextQuestionT | undefined = (function () {
-                        if (props.data.kind === "text") {
-                            if (props.data.type === "short-answer") {
-                                return {
-                                    isShortAnswerQuestion: true,
-                                    text: "",
-                                    answer: "",
-                                    name: "",
-                                };
-                            }
-
-                            if (props.data.type === "long-answer") {
-                                return {
-                                    isShortAnswerQuestion: false,
-                                    text: "",
-                                    name: "",
-                                };
-                            }
-                        }
-                    })();
-
-                    if (newQuestion) {
-                        examInfo[index].questions = [...examInfo[index].questions, newQuestion];
-                    }
+        const newQuestion: TextQuestionT | undefined = (function () {
+            if (props.data.kind === "text") {
+                if (props.data.type === "short-answer") {
+                    return {
+                        isShortAnswerQuestion: true,
+                        text: "",
+                        answer: "",
+                        name: "",
+                    };
                 }
-                return section;
-            });
 
-            return newExamInfo;
-        };
-        props.setter(handler);
+                if (props.data.type === "long-answer") {
+                    return {
+                        isShortAnswerQuestion: false,
+                        text: "",
+                        name: "",
+                    };
+                }
+            }
+        })();
+
+        if (Number(props.data.questionIndex) >= 0) {
+            const handler = (examInfo: ExamModel) => {
+                examInfo = examInfo.map((section) => {
+                    if (section.number === props.data.sectionNumber) {
+                        let before = section.questions.filter(
+                            (_, index) => index <= Number(props.data.questionIndex)
+                        );
+                        let after = [...section.questions].slice(
+                            Number(props.data.questionIndex) + 1
+                        );
+                        if (newQuestion) {
+                            section.questions = [...before, newQuestion, ...after];
+                        }
+                    }
+                    return section;
+                });
+                return examInfo;
+            };
+
+            props.setter(handler);
+        } else {
+            const handler = (examInfo: ExamModel) => {
+                let newExamInfo = examInfo.map((section, index) => {
+                    if (section.number === props.data.sectionNumber) {
+                        if (newQuestion) {
+                            examInfo[index].questions = [...examInfo[index].questions, newQuestion];
+                        }
+                    }
+                    return section;
+                });
+
+                return newExamInfo;
+            };
+            props.setter(handler);
+        }
     },
 
     onChangeEditor(props: {
