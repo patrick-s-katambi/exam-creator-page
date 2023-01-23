@@ -49,6 +49,15 @@ export function useApp() {
         });
     };
 
+    const onEditSectionTitle = (props: { sectionNumber: number; name: string }) => {
+        appTraits.onEditSectionTitle({
+            setter: setQuestions,
+            sectionNumber: props.sectionNumber,
+            sectionSetter: setSections,
+            name: props.name,
+        });
+    };
+
     return {
         questions,
         sections,
@@ -58,6 +67,7 @@ export function useApp() {
             onEditorChange,
             onDeleteQuestion,
             onDeleteSection,
+            onEditSectionTitle,
         },
     };
 }
@@ -229,5 +239,23 @@ export const appTraits = Object.freeze({
             return sectionNumbers;
         };
         props.sectionSetter(handler2);
+    },
+
+    onEditSectionTitle(props: {
+        sectionNumber: number;
+        name: string;
+        setter: React.Dispatch<React.SetStateAction<ExamModel>>;
+        sectionSetter: React.Dispatch<React.SetStateAction<SectionsNumbersT>>;
+    }) {
+        const handler = (examInfo: ExamModel) => {
+            examInfo = examInfo.map((section) => {
+                if (section.number === props.sectionNumber) {
+                    section.name = props.name;
+                }
+                return section;
+            });
+            return examInfo;
+        };
+        props.setter(handler);
     },
 });

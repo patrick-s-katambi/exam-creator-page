@@ -5,6 +5,7 @@ import {
     EditableInput,
     EditablePreview,
     Heading,
+    Input,
     ScaleFade,
     Text,
 } from "@chakra-ui/react";
@@ -105,9 +106,11 @@ function App() {
                 let isSectionHovered = (() => {
                     return isItemHovered({ number: index, kind: "section" });
                 })();
+                let sectionName = questions.find((sect) => sect.number === sectionNumber)?.name;
                 return (
                     <React.Fragment key={`${index}-${sectionNumber}`}>
                         <Container
+                            _hover={{ bg: secondaryBg }}
                             minW={"full"}
                             position={"relative"}
                             display="flex"
@@ -121,8 +124,7 @@ function App() {
                         >
                             <ScaleFade initialScale={0.9} in={isSectionHovered}>
                                 <Container
-                                    bg={secondaryBg}
-                                    p="2"
+                                    bg={"transparent"}
                                     h={10}
                                     minW="fit-content"
                                     w="fit-content"
@@ -145,11 +147,19 @@ function App() {
                             </ScaleFade>
 
                             <Editable
-                                defaultValue={`Section ${index + 1}`}
                                 h="fit-content"
                                 w="full"
                                 textAlign={"center"}
-                                p="0"
+                                p="2"
+                                value={`${sectionName}`}
+                                onChange={(value) => {
+                                    console.log("editing", value);
+
+                                    handlers.onEditSectionTitle({
+                                        name: value === "" ? `Section ${index + 1}` : value,
+                                        sectionNumber,
+                                    });
+                                }}
                             >
                                 <EditablePreview as={"h1"} fontSize="3xl" lineHeight={"none"} />
                                 <EditableInput fontSize="3xl" />
@@ -186,10 +196,18 @@ function App() {
                                             let isShortAnswer = Boolean(
                                                 question.answer || question.answer === ""
                                             );
+                                            let isQuestionHovered = (() => {
+                                                return isItemHovered({
+                                                    number: indexxx,
+                                                    kind: "question",
+                                                    section: _section.number,
+                                                });
+                                            })();
                                             return (
                                                 <React.Fragment key={indexxx}>
                                                     <Container
                                                         key={indexx}
+                                                        _hover={{ bg: secondaryBg }}
                                                         minW={"full"}
                                                         p="2"
                                                         position={"relative"}
@@ -206,35 +224,36 @@ function App() {
                                                         }}
                                                         onMouseLeave={onMouseLeave}
                                                     >
-                                                        <Container
-                                                            position={"absolute"}
-                                                            top={0}
-                                                            right={0}
-                                                            bg={secondaryBg}
-                                                            p="2"
-                                                            h={10}
-                                                            minW="fit-content"
-                                                            w="fit-content"
-                                                            rounded={"lg"}
-                                                            display="flex"
-                                                            flexDirection={"row"}
-                                                            alignItems="center"
-                                                            gap="2"
+                                                        <ScaleFade
+                                                            initialScale={0.9}
+                                                            in={isQuestionHovered}
                                                         >
-                                                            <TopButton
-                                                                label="delete"
-                                                                Icon={
-                                                                    <MdOutlineDelete className="text-white" />
-                                                                }
-                                                                onClick={() =>
-                                                                    handlers.onDeleteQuestion({
-                                                                        questionIndex: indexxx,
-                                                                        sectionNumber:
-                                                                            _section.number,
-                                                                    })
-                                                                }
-                                                            />
-                                                        </Container>
+                                                            <Container
+                                                                h={10}
+                                                                minW="full"
+                                                                w="fit-content"
+                                                                rounded={"lg"}
+                                                                display="flex"
+                                                                flexDirection={"row"}
+                                                                alignItems="center"
+                                                                justifyContent={"end"}
+                                                                gap={0.5}
+                                                            >
+                                                                <TopButton
+                                                                    label="delete"
+                                                                    Icon={
+                                                                        <MdOutlineDelete className="text-white" />
+                                                                    }
+                                                                    onClick={() =>
+                                                                        handlers.onDeleteQuestion({
+                                                                            questionIndex: indexxx,
+                                                                            sectionNumber:
+                                                                                _section.number,
+                                                                        })
+                                                                    }
+                                                                />
+                                                            </Container>
+                                                        </ScaleFade>
 
                                                         <Text fontSize={"sm"}>
                                                             Question {indexxx + 1}
@@ -276,13 +295,7 @@ function App() {
                                                         )}
 
                                                         <ActionButtons
-                                                            isHovered={(() => {
-                                                                return isItemHovered({
-                                                                    number: indexxx,
-                                                                    kind: "question",
-                                                                    section: _section.number,
-                                                                });
-                                                            })()}
+                                                            isHovered={isQuestionHovered}
                                                             handlers={{
                                                                 section: actionHandlers.section,
                                                                 longQuestion: () => {
@@ -330,15 +343,16 @@ interface TopButtonProps {
 
 const TopButton: React.FunctionComponent<TopButtonProps> = (props) => (
     <Button
-        _hover={{ bg: primaryBg, gap: 2 }}
+        _hover={{ bg: secondaryBg, gap: 2 }}
+        bg={primaryBg}
+        border="0.5px solid white"
         transition="all"
         transitionDuration={"300ms"}
         gap={1}
         h="fit-content"
         p="1"
-        variant={"ghost"}
+        variant={"solid"}
         onClick={props.onClick}
-        border={`0.3px solid ${textColor}`}
     >
         {props.Icon ?? <MdAdd color={textColor} />}
         {props.label && <Text fontSize={"sm"}>{props.label}</Text>}
