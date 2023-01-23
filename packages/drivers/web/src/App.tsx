@@ -199,6 +199,13 @@ function App() {
                                                                 Icon={
                                                                     <MdOutlineDelete className="text-white" />
                                                                 }
+                                                                onClick={() =>
+                                                                    handlers.onDeleteQuestion({
+                                                                        questionIndex: indexxx,
+                                                                        sectionNumber:
+                                                                            _section.number,
+                                                                    })
+                                                                }
                                                             />
                                                         </Container>
 

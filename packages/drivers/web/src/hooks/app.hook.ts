@@ -33,7 +33,19 @@ export function useApp() {
         });
     };
 
-    return { questions, sections, handlers: { onAddSection, onAddQuestion, onEditorChange } };
+    const onDeleteQuestion = (props: { questionIndex: number; sectionNumber: number }) => {
+        appTraits.onDeleteQuestion({
+            setter: setQuestions,
+            questionIndex: props.questionIndex,
+            sectionNumber: props.sectionNumber,
+        });
+    };
+
+    return {
+        questions,
+        sections,
+        handlers: { onAddSection, onAddQuestion, onEditorChange, onDeleteQuestion },
+    };
 }
 
 // question list state
@@ -158,6 +170,26 @@ export const appTraits = Object.freeze({
                             } else section.questions[props.questionIndex].text = props.newValue;
                         }
                     }
+                }
+
+                return section;
+            });
+            return examInfo;
+        };
+        props.setter(handler);
+    },
+
+    onDeleteQuestion(props: {
+        questionIndex: number;
+        sectionNumber: number;
+        setter: React.Dispatch<React.SetStateAction<ExamModel>>;
+    }) {
+        const handler = (examInfo: ExamModel) => {
+            examInfo = examInfo.map((section) => {
+                if (section.number === props.sectionNumber) {
+                    section.questions = section.questions.filter(
+                        (_, index) => index !== props.questionIndex
+                    );
                 }
 
                 return section;
